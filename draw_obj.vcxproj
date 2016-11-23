@@ -155,7 +155,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obj_reader.cpp" />
     <ClCompile Include="Painter.cpp" />
-    <ClCompile Include="回收站.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

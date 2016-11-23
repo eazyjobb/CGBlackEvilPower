@@ -32,9 +32,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="回收站.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Obj_reader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

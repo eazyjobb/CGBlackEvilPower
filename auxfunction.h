@@ -3,6 +3,7 @@
 #ifndef AUXFUNCTION
 #define AUXFUNCTION
 
+#include <iostream>
 #include <vector>
 #include <cmath>
 

@@ -363,7 +363,7 @@ int main(int argc, char *argv[]) {
 
 	test.test_init();
 
-	obj_reader.load_from_file("jpg_resource/M9.obj", test);
+	obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);
 	//obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);
 	
 	//obj_reader.load_from_file("jpg_resource/test.obj", test);

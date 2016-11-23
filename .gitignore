@@ -1,0 +1,8 @@
+*.pdb
+*.tlog
+*.db
+x64/Debug/*.*
+Debug/*.*
+.vs/
+*.idb
+draw_obj.VC.VC.opendb
