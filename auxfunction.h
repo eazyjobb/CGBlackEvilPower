@@ -8,12 +8,15 @@
 #include <cmath>
 
 namespace wmz {
-#define SQR(x) ((x)*(x))
+
+	template <class T>
+		inline T SQR(T x) { return x * x; }
 
 	class Point3 {
 	public:
 		float x, y, z;
 		Point3(float a = 0, float b = 0, float c = 0) : x(a), y(b), z(c) {}
+		void set(float a = 0, float b = 0, float c = 0) { x = a; y = b; z = c; }
 		Point3 operator + (const Point3 &rhs) const {
 			return Point3(x + rhs.x, y + rhs.y, z + rhs.z);
 		}
@@ -26,11 +29,11 @@ namespace wmz {
 		Point3 operator / (float rhs) const {
 			return Point3(x / rhs, y / rhs, z / rhs);
 		}
-		double norm() const {
+		float norm() const {
 			return sqrt(SQR(x) + SQR(y) + SQR(z));
 		}
 		void normalize() {
-			double l = this->norm();
+			float l = this->norm();
 			x /= l; y /= l; z /= l;
 		}
 		void write() const {
@@ -85,7 +88,7 @@ namespace wmz {
 		}
 	};
 
-	void rotate(float &x, float &y, double A = 10);	//自定义二维向量旋转函数
+	void rotate(float &x, float &y, float A = 10);	//自定义二维向量旋转函数
 
 	Point3 det(const Point3 &a, const Point3 &b); 	//三维叉积
 
@@ -93,7 +96,6 @@ namespace wmz {
 
 	int power_of_two(int n); //检查一个数是否是2的整数次幂
 
-#undef SQR
 };
 
 #endif

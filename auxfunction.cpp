@@ -10,9 +10,9 @@ int wmz::power_of_two(int n)
 	return (n & (n - 1)) == 0;
 }
 
-void wmz::rotate(float &x, float &y, double A) { //向量(x,y)沿垂直平面的轴逆时针旋转fin（单位弧度 ）
-	double xx = x * cos(A) - y * sin(A), yy = x * sin(A) + y * cos(A);
-	x = xx; y = yy;
+void wmz::rotate(float &x, float &y, float A) { //向量(x,y)沿垂直平面的轴逆时针旋转fin（单位弧度 ）
+	float xx = x * cos(A) - y * sin(A), yy = x * sin(A) + y * cos(A);
+	x = (float)xx; y = (float) yy;
 }
 
 wmz::Point3 wmz::det(const wmz::Point3 &a, const wmz::Point3 &b) {

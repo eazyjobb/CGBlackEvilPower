@@ -14,8 +14,6 @@
 #include <windows.h>
 #include <GL/glut.h>
 
-#define uint unsigned int
-
 ////////////////////////////////////////////////////texture 
 
 Texture::Texture() {
@@ -252,21 +250,21 @@ void Object::calc_norm_vector() {	//默认完整性：默认每个面都是正确的且有三个点及
 		changed = false;
 
 		norm_vector.clear(); points_deg.clear();
-		for (int i = 0; i < points.size(); ++i) {
+		for (size_t i = 0; i < points.size(); ++i) {
 			norm_vector.push_back(wmz::Point3());
 			points_deg.push_back(0);
 		}
 
-		for (int i = 0; i < faces.size(); ++i) {
+		for (size_t i = 0; i < faces.size(); ++i) {
 			//std::cout << points.size() << ' ' << faces[i][0] << ' ' << faces[i][1] << ' ' << faces[i][2] << std::endl;
 			wmz::Point3 norm_v = wmz::det(points[faces[i][1]] - points[faces[i][0]], points[faces[i][2]] - points[faces[i][1]]);
-			for (int j = 0; j < faces[i].size(); ++j) {
+			for (size_t j = 0; j < faces[i].size(); ++j) {
 				points_deg[faces[i][j]] += 1;
 				norm_vector[faces[i][j]] = norm_vector[faces[i][j]] + norm_v;
 			}
 		}
 
-		for (int i = 0; i < points.size(); ++i) {
+		for (size_t i = 0; i < points.size(); ++i) {
 			norm_vector[i] = norm_vector[i] / points_deg[i];
 			norm_vector[i].normalize();
 		}
@@ -291,10 +289,10 @@ void Object::show() { //未对面的合法性作检测和纠正
 		glBindTexture(GL_TEXTURE_2D, 2); //绑定测试纹理
 		GLfloat xx[] = {0, 1, 1, 0}, yy[] = {0, 0, 1, 1};
 	
-		for (uint i = 0; i < faces.size(); ++i) {
+		for (size_t i = 0; i < faces.size(); ++i) {
 			//std::cout << "===================" << std::endl;
 			glBegin(GL_POLYGON); {
-				for (uint j = 0; j < faces[i].size(); ++j) {
+				for (size_t j = 0; j < faces[i].size(); ++j) {
 					wmz::Point3 &u = points[faces[i][j]];
 				//	std::cout << faces[i][j] << std::endl;
 				//	u.write();
@@ -303,7 +301,7 @@ void Object::show() { //未对面的合法性作检测和纠正
 						glNormal3f(norm_vector[ind].x, norm_vector[ind].y, norm_vector[ind].z);
 							//printf("%d %f %f %f\n", ind, norm_vector[ind].x, norm_vector[ind].y, norm_vector[ind].z);
 						//绑定纹理
-						if (ind < texturepos.size()) {
+						if (ind >= 0 && (size_t)ind < texturepos.size()) {
 							wmz::Point3 &v = texturepos[ind];
 							glTexCoord2f(v.x, v.y);
 							//std::cout << v.x << "  " << v.y << ' ' << ind << std::endl;
@@ -404,7 +402,7 @@ void Painter::test_init() {
 	obj[nt].add_face(wmz::Face(4, 5, 6, 7));
 
 
-	for (int i = 0; i < obj.size(); ++i)
+	for (size_t i = 0; i < obj.size(); ++i)
 		obj[i].calc_norm_vector();
 
 	//obj[0].rotate(30, 0, 30);
@@ -460,7 +458,7 @@ double angle = 0;
 void Painter::on_reshape(int w, int h) {}
 
 void Painter::show() {
-	for (int i = 0; i < obj.size(); ++i) {
+	for (size_t i = 0; i < obj.size(); ++i) {
 		if (mode == 3) glDepthMask(GL_FALSE);	//必须将深度缓冲区设置为只读，不然前面的物品会覆盖后面的物品
 		else glDepthMask(GL_TRUE);
 				

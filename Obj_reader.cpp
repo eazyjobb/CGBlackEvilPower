@@ -23,7 +23,7 @@ int Obj_reader::load_from_file(const char *str) {
 	}
 	else {
 		std::string str;
-		float x, y, z, w;
+		float x, y, z;
 		while (input >> str) {
 			
 			if (str.substr(0, 1) == "#") {
@@ -71,8 +71,7 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 		std::string str;
 		
 		std::ofstream os;
-		float x, y, z, w;
-		int nowobj;
+		float x, y, z;
 
 		os.open("test.txt");
 		os << "test begin " << std::endl;
@@ -127,7 +126,7 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 				}
 				else if (sscanf_s(str.c_str(), "%f/%f %f/%f", &x, &y, &x, &y) == 4) {
 					//std::cout << "format 2" << std::endl;
-					for (int i = 0; i < str.size(); ++i) if (str[i] == '/') str[i] = ' ';
+					for (size_t i = 0; i < str.size(); ++i) if (str[i] == '/') str[i] = ' ';
 
 					int x, y;
 					ss.clear(); ss << str;
@@ -139,7 +138,7 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 				}
 				else if (sscanf_s(str.c_str(), "%f/%f/%f %f/%f/%f", &x, &x, &x, &x, &x, &x) == 6) {
 					//std::cout << "format 3" << std::endl;
-					for (int i = 0; i < str.size(); ++i) if (str[i] == '/') str[i] = ' ';
+					for (size_t i = 0; i < str.size(); ++i) if (str[i] == '/') str[i] = ' ';
 
 					int x, y, z;
 					ss.clear(); ss << str;
@@ -171,9 +170,9 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 	
 	painter.add_obj(Object(filename));
 
-	unsigned int tmpLim = std::max(v.size(), std::max(vt.size(), vn.size()));
+	size_t tmpLim = std::max(v.size(), std::max(vt.size(), vn.size()));
 
-	for (int i = 0; i < tmpLim; ++i) {
+	for (size_t i = 0; i < tmpLim; ++i) {
 		//std::cout << i << ' ' << v.size() << ' ' << vt.size() << ' ' << vn.size() << std::endl;
 		painter[nowobj].add_all_points(
 			i < v.size() ?  v[i]  : wmz::Point3(),
@@ -182,12 +181,12 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 		);
 	}
 
-	for (int i = 0; i < faces.size(); ++i) {
+	for (size_t i = 0; i < faces.size(); ++i) {
 		
 		wmz::Face tmpface;
 		//if (texturepos.size() && !normalvec.size()) {
 			//std::cout << faces[i].size() << std::endl;
-			for (int j = 0; j < faces[i].size(); ++j) {
+			for (size_t j = 0; j < faces[i].size(); ++j) {
 				//std::cout << faces[i][j] - 1 << ' ' << texturepos[i][j] - 1 << std::endl;
 				tmpface.add(faces[i][j] - 1, \
 						    (i < texturepos.size() && j < texturepos[i].size()) ? (texturepos[i][j] - 1) : -1, \
