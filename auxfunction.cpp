@@ -3,6 +3,21 @@
 
 /////////////////////////////////////////
 
+std::wstring wmz::StringToWString(const std::string &str)
+{
+	std::wstring wstr(str.length(), L' ');
+	std::copy(str.begin(), str.end(), wstr.begin());
+	return wstr;
+}
+
+//只拷贝低字节至string中
+std::string wmz::WStringToString(const std::wstring &wstr)
+{
+	std::string str(wstr.length(), ' ');
+	std::copy(wstr.begin(), wstr.end(), str.begin());
+	return str;
+}
+
 int wmz::power_of_two(int n)
 {
 	if (n <= 0)

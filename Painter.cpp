@@ -449,6 +449,7 @@ double angle = 0;
 		ps: 20161030： 还是会碰到奇怪的显示不了的问题
 	5. 如何根据屏幕上一点取原空间坐标 http://blog.csdn.net/zhongjling/article/details/8488844
 	6. OpenGL中使用jpg图片做纹理 http://blog.sina.com.cn/s/blog_a72cd1960102v8nq.html、http://blog.csdn.net/jiese1990/article/details/8474333
+	7.输入输出与本地化流.pdf 要处理文件中文路径问题
 
 	链接过程中，多个cpp可能include同一个头文件，因此在头文件里包含变量定义会造成链接时的重定义错误，\
 宏只对于一个cpp来说因此无法避免这个链接问题。具体解决应该用宏+extern解决问题。

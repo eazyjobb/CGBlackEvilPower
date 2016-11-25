@@ -96,6 +96,12 @@ namespace wmz {
 
 	int power_of_two(int n); //检查一个数是否是2的整数次幂
 
+	std::wstring StringToWString(const std::string &str); //string 转 wstring
+
+	
+	std::string WStringToString(const std::wstring &wstr); //string 转 wstring  只拷贝低字节至string中 
+	
+
 };
 
 #endif
