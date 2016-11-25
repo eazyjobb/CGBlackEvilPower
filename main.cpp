@@ -203,9 +203,10 @@ void processMouseActiveMotion(int x, int y)			//Êó±êÒÆ¶¯²¢ÇÒ×ó¼ü±»°´ÏÂÊ±µ÷ÓÃ
 		return;
 	}
 
-	test[0].rotate(0, fin * 200 * (x - Last_x)*0.07, 0);
-
-	test[0].rotate(0, 0, -fin * 200 * (y - Last_y)*0.07);
+	if (test.get_objnumber()) {
+		test[0].rotate(0, fin * 200 * (x - Last_x)*0.07, 0);
+		test[0].rotate(0, 0, -fin * 200 * (y - Last_y)*0.07);
+	}
 
 	Last_x = x;
 	Last_y = y;
@@ -233,6 +234,7 @@ void processMouseActiveMotion_stop(int x, int y)			//Êó±êÒÆ¶¯²¢ÇÒÓÒ¼ü±»°´ÏÂÊ±µ÷Ó
 {
 	Mouse_flag = false;
 }
+
 #define  GLUT_WHEEL_UP 3           //¶¨Òå¹öÂÖ²Ù×÷  
 #define  GLUT_WHEEL_DOWN 4  
 void processMouse(int button, int state, int x, int y)
@@ -302,7 +304,7 @@ void processMenuEvents(int option) {
 		ofn.hInstance = GetModuleHandle(NULL);
 		//ofn.hwndOwner = hWndDlg;
 		ofn.lpstrFile = szFilePath;
-		ofn.lpstrFilter = TEXT("All File(*.*)\0*.*\0\0");
+		ofn.lpstrFilter = TEXT("OBJ File(*.obj)\0*.obj\0\0");
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.nMaxFile = MAX_PATH;
 		ofn.lpstrInitialDir = TEXT(",");
@@ -354,7 +356,7 @@ void createGLUTMenus() {
 
 	menu = glutCreateMenu(processMenuEvents);
 	glutAddSubMenu("±£´æÎª", sub_SAVE);
-	glutAddMenuEntry("¶ÁÈ¡", LOAD);
+	glutAddMenuEntry("¶ÁÈ¡obj", LOAD);
 	glutAddSubMenu("Ä£Ê½Ñ¡Ôñ", sub_MODE);
 	glutAddSubMenu("µÆ¹â", sub_LIGHT);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);

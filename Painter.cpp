@@ -475,7 +475,7 @@ int Painter::get_mode() const {
 	return mode;  
 }
 
-int Painter::get_objnumber() const {
+size_t Painter::get_objnumber() const {
 	return obj.size();
 }
 

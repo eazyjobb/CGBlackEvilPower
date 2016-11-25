@@ -98,7 +98,7 @@ public://公用接口
 	void set_mode(int nxt_mode = -1);	//设定显示模式
 	int get_mode() const ;				//获取当前显示模式
 
-	int get_objnumber() const ;
+	size_t get_objnumber() const ;
 
 
 	void test(int *argc, char **argv); //测试用函数
