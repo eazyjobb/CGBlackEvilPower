@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <conio.h>
+#include <windows.h>
 
 #define GLOBAL_VARIABLES_HERE
 #include "Painter.h"
@@ -266,6 +267,7 @@ void processMouse(int button, int state, int x, int y)
 #define LIGHT_OPEN 8
 #define LIGHT_CLOSE 9
 
+
 void processMenuEvents(int option) {
 	//option，就是传递过来的value的值。
 	switch (option)
@@ -286,7 +288,40 @@ void processMenuEvents(int option) {
 		break;
 	case BMP_SAVE:
 		break;
-	case LOAD:
+	case LOAD: {
+		cout << "hehhehehehehehehe" << endl;
+		
+		//////////////////////////////////////////////////////////////////////
+		OPENFILENAME ofn;
+		TCHAR szFilePath[MAX_PATH] = { 0 };
+
+		memset(szFilePath, 0, MAX_PATH);
+		memset(&ofn, 0, sizeof(OPENFILENAME));
+
+		ofn.lpstrTitle = TEXT("选择要加载的PE文件");
+		ofn.hInstance = GetModuleHandle(NULL);
+		//ofn.hwndOwner = hWndDlg;
+		ofn.lpstrFile = szFilePath;
+		ofn.lpstrFilter = TEXT("All File(*.*)\0*.*\0\0");
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.nMaxFile = MAX_PATH;
+		ofn.lpstrInitialDir = TEXT(",");
+		ofn.Flags = OFN_EXPLORER | OFN_ALLOWMULTISELECT;  //OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+
+		if (!GetOpenFileName(&ofn))
+			return;
+		
+		std::wstring wstr(szFilePath);
+		std::string str;
+
+		str = wmz::WStringToString(wstr);
+
+		std::wcout << wstr << endl;
+		std::cout << str << endl;
+		
+		obj_reader.load_from_file(str.c_str(), test);
+		cout << "load finish!" << endl;
+	}
 		break;
 	case LIGHT_OPEN:
 		glEnable(GL_LIGHTING);          //启用光照  
@@ -348,6 +383,7 @@ void processSpecialKeys(unsigned char key, int x, int y)
 
 /*
 使用方法：
+(此法已过期，仅用于debug，现在支持ui内的控制)
 	运行后在控制台窗口内按键
 	按键响应写得不是很好，请先按两下空格。
 	wsad分别为前后左右移动摄像机位置
@@ -363,7 +399,7 @@ int main(int argc, char *argv[]) {
 
 	test.test_init();
 
-	obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);
+	//obj_reader.load_from_file("jpg_resource/M9.obj", test);
 	//obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);
 	
 	//obj_reader.load_from_file("jpg_resource/test.obj", test);
