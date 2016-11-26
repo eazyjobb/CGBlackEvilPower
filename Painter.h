@@ -45,6 +45,7 @@ public:
 
 	void calc_norm_vector(); //读取完整个物体后为每该物体计算其每个顶点的法向量
 
+	size_t tmp_texture;
 private:
 	float x, y, z; //物体所在空间坐标
 	float alpha, gama, beta; //物体沿x轴转动角度，y轴转动角度，z轴转动角度
@@ -110,6 +111,7 @@ public://公用接口
 		return obj[rhs];
 	}
 
+	
 private: //私用接口
 
 private: //私用数据

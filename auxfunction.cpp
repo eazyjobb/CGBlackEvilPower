@@ -1,22 +1,8 @@
 #include "auxfunction.h"
-
+#include <windows.h>
+#include <fstream>
 
 /////////////////////////////////////////
-
-std::wstring wmz::StringToWString(const std::string &str)
-{
-	std::wstring wstr(str.length(), L' ');
-	std::copy(str.begin(), str.end(), wstr.begin());
-	return wstr;
-}
-
-//只拷贝低字节至string中
-std::string wmz::WStringToString(const std::wstring &wstr)
-{
-	std::string str(wstr.length(), ' ');
-	std::copy(wstr.begin(), wstr.end(), str.begin());
-	return str;
-}
 
 int wmz::power_of_two(int n)
 {
@@ -39,4 +25,56 @@ wmz::Point3 wmz::det(const wmz::Point3 &a, const wmz::Point3 &b) {
 
 double wmz::dot(const wmz::Point3 &a, const wmz::Point3 &b) {	//三维点积
 	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+
+std::wstring wmz::StringToWString(const std::string &str) {
+	std::wstring wstr(str.length(), L' ');
+	std::copy(str.begin(), str.end(), wstr.begin());
+	return wstr;
+}
+
+//只拷贝低字节至string中
+std::string wmz::WStringToString(const std::wstring &wstr) {
+	std::string str(wstr.length(), ' ');
+	std::copy(wstr.begin(), wstr.end(), str.begin());
+	return str;
+}
+
+
+
+std::wstring wmz::myGetOpenFileName(std::wstring obj_type) {
+	for (size_t i = 0; i < obj_type.size(); ++i) {
+		if (obj_type[i] == '\a') obj_type[i] = 0;
+	}
+	
+	OPENFILENAME ofn;
+
+	TCHAR szFilePath[MAX_PATH*2] = { 0 };
+	
+	memset(szFilePath, 0, MAX_PATH*2);
+	memset(&ofn, 0, sizeof(OPENFILENAME));
+	
+	
+	ofn.lpstrTitle = TEXT("选择要加载的文件");
+	ofn.hInstance = GetModuleHandle(NULL);
+	//ofn.hwndOwner = hWndDlg;
+	ofn.lpstrFile = szFilePath;
+	ofn.lpstrFilter = (LPCWSTR)obj_type.c_str(); 
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.nMaxFile = MAX_PATH;
+	//ofn.lpstrInitialDir = TEXT(",");
+											  // 一个fopen与其他路径读入错误的原因及解决方法 http://blog.csdn.net/zhanggongwu/article/details/6372995
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;  //OFN_EXPLORER | OFN_ALLOWMULTISELECT;  //OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	
+	std::wstring res;
+	
+	if (!GetOpenFileName(&ofn)) {
+		std::cout << "open file failed" << std::endl;
+		return res;
+	}
+	else
+		std::cout << "open file successful" << ' ' << sizeof(ofn) << std::endl;
+	
+	return std::wstring(szFilePath);
 }

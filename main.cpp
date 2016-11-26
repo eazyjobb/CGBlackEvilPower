@@ -1,7 +1,7 @@
+#include <windows.h>
 #include <iostream>
 #include <cstdlib>
 #include <conio.h>
-#include <windows.h>
 
 #define GLOBAL_VARIABLES_HERE
 #include "Painter.h"
@@ -110,7 +110,6 @@ void renderScene(void) {
 		glEnd();
 		
 		glPushMatrix();{
-
 			glDisable(GL_BLEND);
 			glDisable(GL_TEXTURE_2D);
 			switch (test.get_mode()) {
@@ -147,7 +146,7 @@ void renderScene(void) {
 		glutSwapBuffers();
 		glFlush();
 
-		std::cout << "Running...  " << std::endl;
+
 	}
 }
 
@@ -181,8 +180,6 @@ void SetupLights2() {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specularLight); //指定材料对镜面光的反应  
 	glMateriali(GL_FRONT, GL_SHININESS, 100);           //指定反射系数  
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -265,9 +262,10 @@ void processMouse(int button, int state, int x, int y)
 #define CRYSTAL_MODE 4
 #define OBJ_SAVE 5
 #define BMP_SAVE 6
-#define LOAD 7
+#define LOAD_OBJ 7
 #define LIGHT_OPEN 8
 #define LIGHT_CLOSE 9
+#define LOAD_TEXTURE 10
 
 
 void processMenuEvents(int option) {
@@ -290,38 +288,32 @@ void processMenuEvents(int option) {
 		break;
 	case BMP_SAVE:
 		break;
-	case LOAD: {
-		cout << "hehhehehehehehehe" << endl;
+	case LOAD_OBJ: {
+		//std::wstring wstr = wmz::myGetOpenFileName(wmz::StringToWString("OBJ File(*.obj)\0*.obj\0\0").c_str());
+																		//此处的\0需要用\a代替，不然构造的时候只会读到第一个0
+		std::wstring wstr = wmz::myGetOpenFileName(wmz::StringToWString("OBJ File(*.obj)\a*.obj\a\0")); //这里有bug！字符串只有一半（读到0就停了
+		std::string str = wmz::WStringToString(wstr);
 		
-		//////////////////////////////////////////////////////////////////////
-		OPENFILENAME ofn;
-		TCHAR szFilePath[MAX_PATH] = { 0 };
+		if (str.size()) 
+			obj_reader.load_from_file(str.c_str(), test);
 
-		memset(szFilePath, 0, MAX_PATH);
-		memset(&ofn, 0, sizeof(OPENFILENAME));
+		cout << "load finish!" << endl;
+	}
+		break;
+	case LOAD_TEXTURE: {
+		cout << "load texture!!!" << endl;
+		//此处的\0需要用\a代替，不然构造的时候只会读到第一个0
 
-		ofn.lpstrTitle = TEXT("选择要加载的PE文件");
-		ofn.hInstance = GetModuleHandle(NULL);
-		//ofn.hwndOwner = hWndDlg;
-		ofn.lpstrFile = szFilePath;
-		ofn.lpstrFilter = TEXT("OBJ File(*.obj)\0*.obj\0\0");
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrInitialDir = TEXT(",");
-		ofn.Flags = OFN_EXPLORER | OFN_ALLOWMULTISELECT;  //OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-
-		if (!GetOpenFileName(&ofn))
-			return;
+		std::wstring wstr =  wmz::myGetOpenFileName(wmz::StringToWString("Texture File(*.jpg)\a*.jpg\a\0")); //这里有bug！字符串只有一半（读到0就停了
+		std::string str = wmz::WStringToString(wstr);
 		
-		std::wstring wstr(szFilePath);
-		std::string str;
-
-		str = wmz::WStringToString(wstr);
-
-		std::wcout << wstr << endl;
-		std::cout << str << endl;
+		std::cout << str << std::endl;
 		
-		obj_reader.load_from_file(str.c_str(), test);
+		if (str.size()) {
+			std::cout << "load texture successfully ? :  " << texture.load_texture_all(str.c_str(), str.c_str()/*"M9"*/) << std::endl;
+			test[test.get_objnumber()-1].tmp_texture = texture.getByStr(str.c_str());
+		}
+			//std::cout << "load texture successfully ? :  " << texture.load_texture_all("test.bmp", "M9") << std::endl;
 		cout << "load finish!" << endl;
 	}
 		break;
@@ -356,7 +348,8 @@ void createGLUTMenus() {
 
 	menu = glutCreateMenu(processMenuEvents);
 	glutAddSubMenu("保存为", sub_SAVE);
-	glutAddMenuEntry("读取obj", LOAD);
+	glutAddMenuEntry("读取obj", LOAD_OBJ);
+	glutAddMenuEntry("读取纹理", LOAD_TEXTURE);
 	glutAddSubMenu("模式选择", sub_MODE);
 	glutAddSubMenu("灯光", sub_LIGHT);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -401,9 +394,8 @@ int main(int argc, char *argv[]) {
 
 	test.test_init();
 
-	//obj_reader.load_from_file("jpg_resource/M9.obj", test);
-	//obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);
-	
+	obj_reader.load_from_file("jpg_resource/M9.obj", test);
+	//obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);	
 	//obj_reader.load_from_file("jpg_resource/test.obj", test);
 
 	glutReshapeFunc(OnReShape);	//窗口大小改变时运行
@@ -420,14 +412,9 @@ int main(int argc, char *argv[]) {
 
 	createGLUTMenus();
 
-
-	std::cout << "load texture successfully ? :  " << texture.load_texture("test.bmp", "isokaze") << std::endl;
-	std::cout << "load texture successfully ? :  " << texture.load_texture_all("jpg_resource/Tex_0009_1.jpg", "M9") << std::endl;
-	
+	//std::cout << "load texture successfully ? :  " << texture.load_texture_all("jpg_resource/Tex_0009_1.jpg", "M9") << std::endl;
+	//std::cout << "load texture successfully ? :  " << texture.load_texture_all("jpg_resource/Tex_0009_1.jpg", "M9") << std::endl;
 	
 	glutMainLoop();
-	
-	std::cout << "test Finish" << std::endl;
-
 	return 0;
 }

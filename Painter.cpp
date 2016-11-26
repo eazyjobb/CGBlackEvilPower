@@ -22,14 +22,20 @@ Texture::Texture() {
 }
 
 GLuint Texture::load_texture_all(const char* filename, const char * texture_name) {
+	std::cout << "loading from: " << filename << std::endl;
+
 	GLuint texture_ID = 0;
 	
 	CImage img;
 	if (!SUCCEEDED(img.Load(CString(filename)))) { //  通过图片文件名字来加在
 		std::cerr << "texture load error! " << std::endl;
+		return -1;
 	}
 	int width = img.GetWidth();
 	int height = img.GetHeight();
+
+	std::cout << width << ' ' << height << std::endl;
+
 	unsigned char *pData = NULL;
 	if (img.GetPitch()<0) //GetBits的作用就是获得纹理的位信息缓冲区指针，如果位图是从下到上， 则指向缓冲区末端，否则指向缓冲区首端。而img.GetPitch 就是起这个判断作用，小于 0 指向末端
 		pData = (unsigned char *)img.GetBits() + (img.GetPitch()*(img.GetHeight() - 1));
@@ -59,8 +65,10 @@ GLuint Texture::load_texture(const char* file_name, const char * texture_name) {
 
 	// 打开文件，如果失败，返回
 	FILE* pFile = fopen(file_name, "rb");
-	if (pFile == 0)
+	if (pFile == 0) {
+		std::cerr << "open file failed! " << std::endl;
 		return 0;
+	}
 
 	// 读取文件中图象的宽度和高度
 	fseek(pFile, 0x0012, SEEK_SET);
@@ -275,10 +283,6 @@ void Object::show() { //未对面的合法性作检测和纠正
 	calc_norm_vector();
 
 	glPushMatrix(); {
-		/*
-		std::cout << "==========================" << std::endl;
-		std::cout << alpha << ' ' << gama << ' ' << beta << ' ' << x << ' ' << y << ' ' << z << std::endl;
-		*/
 		glRotatef(alpha, 1, 0, 0);
 		glRotatef(gama, 0, 1, 0);
 		glRotatef(beta, 0, 0, 1);
@@ -286,7 +290,7 @@ void Object::show() { //未对面的合法性作检测和纠正
 		glTranslatef(x, y, z);
 		
 		//glBindTexture(GL_TEXTURE_2D, test_tex); //绑定测试纹理
-		glBindTexture(GL_TEXTURE_2D, 2); //绑定测试纹理
+		glBindTexture(GL_TEXTURE_2D, tmp_texture); //绑定纹理 如果该编号未被绑定，这里绑了会占用编号的
 		GLfloat xx[] = {0, 1, 1, 0}, yy[] = {0, 0, 1, 1};
 	
 		for (size_t i = 0; i < faces.size(); ++i) {
