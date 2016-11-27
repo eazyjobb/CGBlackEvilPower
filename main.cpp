@@ -215,6 +215,7 @@ void processMouse(int button, int state, int x, int y)
 #define LIGHT_OPEN 8
 #define LIGHT_CLOSE 9
 #define LOAD_TEXTURE 10
+#define CREAT_TEST_OBJ 11
 
 
 void processMenuEvents(int option) {
@@ -284,6 +285,11 @@ void processMenuEvents(int option) {
 	case LIGHT_CLOSE:
 		glDisable(GL_LIGHTING);			//关闭光照 
 		break;
+	case CREAT_TEST_OBJ:
+		test.test_init();
+		break;
+	default:
+		break;
 	}
 	renderScene();
 }
@@ -299,7 +305,7 @@ void createGLUTMenus() {
 
 	sub_SAVE = glutCreateMenu(processMenuEvents);
 	glutAddMenuEntry("OBJ文件", OBJ_SAVE);
-	glutAddMenuEntry("BMP文件", BMP_SAVE);
+	//glutAddMenuEntry("BMP文件", BMP_SAVE);
 
 	sub_LIGHT = glutCreateMenu(processMenuEvents);
 	glutAddMenuEntry("开", LIGHT_OPEN);
@@ -307,11 +313,14 @@ void createGLUTMenus() {
 
 
 	menu = glutCreateMenu(processMenuEvents);
+	glutAddMenuEntry("绘制立方体", CREAT_TEST_OBJ);
 	glutAddSubMenu("保存为", sub_SAVE);
 	glutAddMenuEntry("读取obj", LOAD_OBJ);
 	glutAddMenuEntry("读取纹理", LOAD_TEXTURE);
 	glutAddSubMenu("模式选择", sub_MODE);
 	glutAddSubMenu("灯光", sub_LIGHT);
+	
+	
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 }
@@ -352,7 +361,7 @@ int main(int argc, char *argv[]) {
 
 	test.gl_init(&argc, argv);
 
-	test.test_init();
+	
 
 	glutReshapeFunc(OnReShape);	//窗口大小改变时运行
 	glutDisplayFunc(renderScene);	//需要重画时运行

@@ -345,7 +345,7 @@ void Painter::gl_init(int *argc, char **argv) {
 	glutInitWindowSize(600, 480);
 	glutInitWindowPosition(100, 100);
 
-	glutCreateWindow("OpenGL透视投影");
+	glutCreateWindow("OpenGL by黑恶势力");
 
 	glFrontFace(GL_CCW);	//逆时针缠绕方向为面的正面
 	glEnable(GL_NORMALIZE);  //开启模型缩放时其法向量的启动归一化（未验证效果）
@@ -360,10 +360,11 @@ void Painter::add_obj(const Object &u) {
 }
 
 void Painter::test_init() {
-	return;
+	
 //	obj.clear(); 
 	int nt = obj.size();
-	obj.push_back(Object());
+
+	//obj.push_back(Object());
 	/*
 	obj[0].add_point(wmz::Point3(20, 0, 0));
 	obj[0].add_point(wmz::Point3(-20, 0, 20));
@@ -377,14 +378,14 @@ void Painter::test_init() {
 	*/
 
 //obj[0]: 天空盒子 
-	obj[nt].add_point(wmz::Point3(-500, -250, 500));		
-	obj[nt].add_point(wmz::Point3(-500, -250, -500));
-	obj[nt].add_point(wmz::Point3(-500, 250, -500));
-	obj[nt].add_point(wmz::Point3(-500, 250, 500));
-	obj[nt].add_face(wmz::Face(0, 1, 2, 3));
+	//obj[nt].add_point(wmz::Point3(-500, -250, 500));		
+	//obj[nt].add_point(wmz::Point3(-500, -250, -500));
+	//obj[nt].add_point(wmz::Point3(-500, 250, -500));
+	//obj[nt].add_point(wmz::Point3(-500, 250, 500));
+	//obj[nt].add_face(wmz::Face(0, 1, 2, 3));
 
 ///////////////////////////////////////////////////////
-	return;
+	
 	nt = obj.size();
 	obj.push_back(Object());
 
