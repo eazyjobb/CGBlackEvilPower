@@ -28,6 +28,7 @@ public:
 	void clear() ; 
 	int load_from_file(const char *str) ;
 	int load_from_file(const char *str, Painter &painter);
+	int save_to_file(const char *str);
 private:
 	std::vector<wmz::Point3 > v, vt, vn;
 	std::vector<std::vector<int > > faces, normalvec, texturepos;

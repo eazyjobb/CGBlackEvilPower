@@ -103,6 +103,8 @@ namespace wmz {
 
 	std::wstring myGetOpenFileName(std::wstring obj_type);	//封装了调用windowsAPI进行文件选择
 
+	std::wstring myGetSaveFileName(std::wstring obj_type);
+
 	
 };
 

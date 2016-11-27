@@ -463,6 +463,7 @@ void Painter::on_reshape(int w, int h) {}
 
 void Painter::show() {
 	for (size_t i = 0; i < obj.size(); ++i) {
+		if (i + 1 != obj.size()) continue;
 		if (mode == 3) glDepthMask(GL_FALSE);	//必须将深度缓冲区设置为只读，不然前面的物品会覆盖后面的物品
 		else glDepthMask(GL_TRUE);
 				

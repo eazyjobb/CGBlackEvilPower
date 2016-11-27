@@ -50,7 +50,7 @@ std::wstring wmz::myGetOpenFileName(std::wstring obj_type) {
 	
 	OPENFILENAME ofn;
 
-	TCHAR szFilePath[MAX_PATH*2] = { 0 };
+	TCHAR szFilePath[MAX_PATH] = { 0 };
 	
 	memset(szFilePath, 0, MAX_PATH*2);
 	memset(&ofn, 0, sizeof(OPENFILENAME));
@@ -67,14 +67,34 @@ std::wstring wmz::myGetOpenFileName(std::wstring obj_type) {
 											  // 一个fopen与其他路径读入错误的原因及解决方法 http://blog.csdn.net/zhanggongwu/article/details/6372995
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;  //OFN_EXPLORER | OFN_ALLOWMULTISELECT;  //OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 	
-	std::wstring res;
-	
 	if (!GetOpenFileName(&ofn)) {
-		std::cout << "open file failed" << std::endl;
-		return res;
+		std::cerr << "open file failed" << std::endl;
+		return std::wstring(TEXT(""));
 	}
 	else
 		std::cout << "open file successful" << ' ' << sizeof(ofn) << std::endl;
 	
 	return std::wstring(szFilePath);
+}
+
+std::wstring wmz::myGetSaveFileName(std::wstring obj_type) {
+
+	for (size_t i = 0; i < obj_type.size(); ++i)	if (obj_type[i] == '\a') obj_type[i] = 0;
+
+	TCHAR   szFilename[MAX_PATH] = TEXT("");
+	OPENFILENAME   ofn = { 0 };
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	/// 在保存窗体 （类型那栏） 下面有显示；
+	ofn.lpstrFilter = obj_type.c_str();
+	/// 保存整个路径和文件名在szFilename里面；
+	ofn.lpstrFile = szFilename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER |OFN_ENABLEHOOK |OFN_HIDEREADONLY |OFN_NOCHANGEDIR |OFN_PATHMUSTEXIST;
+	
+	if (!GetSaveFileName(&ofn)) {
+		std::cerr << "save file failed" << std::endl;
+		return std::wstring(TEXT(""));
+	}
+	return std::wstring(szFilename);
 }

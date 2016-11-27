@@ -7,7 +7,7 @@
 #include "Painter.h"
 #include "Obj_reader.h"
 
-//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 //关闭dos控制台窗口，貌似适用于一切windows程序
 
 Painter test;
@@ -23,57 +23,12 @@ int light_button = 0;
 
 void renderScene(void);
 
-void onkey() {
-	char ch = _getch();
-
-	switch (ch) {
-	case 'w':
-		test.go_straight();
-		break;
-	case 's':
-		test.go_straight(-1);
-		break;
-	case 'a':
-		test.go_right(-1);
-		break;
-	case 'd':
-		test.go_right();
-		break;
-	case 'q':
-		test.rotate_left(5);		
-		break;
-	case 'e':
-		test.rotate_right(5);
-		break;
-	case 'u':
-		test[0].rotate(0, fin*200, 0);
-		break;
-	case 'j':
-		test[0].rotate(0, -fin*200, 0);
-		break;
-	case 'l':
-		light_button ^= 1;
-		if (light_button) {
-			glEnable(GL_LIGHTING);          //启用光照  
-		}
-		else {
-			glDisable(GL_LIGHTING);
-		}
-		break;
-	case 'm':
-		test.set_mode();	//switch mode
-		printf("%d\n", test.get_mode());
-		break;
-	default:
-		break;
-	}	
-}
-
 double kk = 0;
 
 void renderScene(void) {
 	//onkey();
 	{
+		glClearColor(0.85f, 0.85f, 0.85f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST); //启用深度检测  
 
@@ -125,10 +80,10 @@ void renderScene(void) {
 				break;
 			case 3:
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				cout << "in mode 3" << endl;
 				glEnable(GL_BLEND);
 				break;
-			default: break;
+			default: 
+				break;
 			}
 				
 			glColor4f(0.8f, 0.9f, 0.9f, test.get_mode() == 3 ? 0.4f : 1.0f);
@@ -145,8 +100,6 @@ void renderScene(void) {
 
 		glutSwapBuffers();
 		glFlush();
-
-
 	}
 }
 
@@ -190,30 +143,26 @@ void processMousePassiveMotion(int x, int y) {
 	Mouse_flag = false;
 }
 
-void processMouseActiveMotion(int x, int y)			//鼠标移动并且左键被按下时调用
-{
-	if (!Mouse_flag)
-	{
+void processMouseActiveMotion(int x, int y) {		//鼠标移动并且左键被按下时调用
+
+	if (!Mouse_flag)	{
 		Mouse_flag = true;
 		Last_x = x;
 		Last_y = y;
 		return;
 	}
-
 	if (test.get_objnumber()) {
-		test[0].rotate(0, fin * 200 * (x - Last_x)*0.07, 0);
-		test[0].rotate(0, 0, -fin * 200 * (y - Last_y)*0.07);
+		test[test.get_objnumber() - 1].rotate(0, fin * 200 * (x - Last_x)*0.07, 0);
+		test[test.get_objnumber() - 1].rotate(0, 0, -fin * 200 * (y - Last_y)*0.07);
 	}
 
 	Last_x = x;
 	Last_y = y;
-
 }
 
-void processMouseActiveMotion_WHEEL(int x, int y)			//鼠标移动并且中键被按下时调用
-{
-	if (!Mouse_flag)
-	{
+void processMouseActiveMotion_WHEEL(int x, int y) {			//鼠标移动并且中键被按下时调用
+
+	if (!Mouse_flag) {
 		Mouse_flag = true;
 		Last_x = x;
 		Last_y = y;
@@ -284,7 +233,19 @@ void processMenuEvents(int option) {
 	case CRYSTAL_MODE:
 		test.set_mode(3);
 		break;
-	case OBJ_SAVE:
+	case OBJ_SAVE: {
+		std::string str = wmz::WStringToString(wmz::myGetSaveFileName(wmz::StringToWString("OBJ File(*.obj)\a*.obj\a\0")).c_str());
+
+		str += ".obj";
+
+		cout << str << endl;
+
+		if (str.size())
+			obj_reader.save_to_file(str.c_str());
+		else
+			std::cerr << "saving failed！ " << std::endl;
+
+	}
 		break;
 	case BMP_SAVE:
 		break;
@@ -304,7 +265,7 @@ void processMenuEvents(int option) {
 		cout << "load texture!!!" << endl;
 		//此处的\0需要用\a代替，不然构造的时候只会读到第一个0
 
-		std::wstring wstr =  wmz::myGetOpenFileName(wmz::StringToWString("Texture File(*.jpg)\a*.jpg\a\0")); //这里有bug！字符串只有一半（读到0就停了
+		std::wstring wstr = wmz::myGetOpenFileName(wmz::StringToWString("Texture File(*.jpg;*.bmp)\a*.jpg;*.bmp\a\0")); //这里有bug！字符串只有一半（读到0就停了
 		std::string str = wmz::WStringToString(wstr);
 		
 		std::cout << str << std::endl;
@@ -313,7 +274,7 @@ void processMenuEvents(int option) {
 			std::cout << "load texture successfully ? :  " << texture.load_texture_all(str.c_str(), str.c_str()/*"M9"*/) << std::endl;
 			test[test.get_objnumber()-1].tmp_texture = texture.getByStr(str.c_str());
 		}
-			//std::cout << "load texture successfully ? :  " << texture.load_texture_all("test.bmp", "M9") << std::endl;
+
 		cout << "load finish!" << endl;
 	}
 		break;
@@ -328,7 +289,6 @@ void processMenuEvents(int option) {
 }
 //菜单构成
 void createGLUTMenus() {
-
 	int menu, sub_MODE, sub_SAVE, sub_LIGHT;
 
 	sub_MODE = glutCreateMenu(processMenuEvents);
@@ -394,16 +354,10 @@ int main(int argc, char *argv[]) {
 
 	test.test_init();
 
-	obj_reader.load_from_file("jpg_resource/M9.obj", test);
-	//obj_reader.load_from_file("jpg_resource/vanille_obj.obj", test);	
-	//obj_reader.load_from_file("jpg_resource/test.obj", test);
-
 	glutReshapeFunc(OnReShape);	//窗口大小改变时运行
 	glutDisplayFunc(renderScene);	//需要重画时运行
 	glutIdleFunc(renderScene);	//空闲时运行
 	glutKeyboardFunc(processSpecialKeys);	//键盘触发
-
-	//glutSpecialFunc(onkey);
 
 	SetupLights2();		//灯光与材质设置	
 
@@ -411,9 +365,6 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(processMousePassiveMotion);
 
 	createGLUTMenus();
-
-	//std::cout << "load texture successfully ? :  " << texture.load_texture_all("jpg_resource/Tex_0009_1.jpg", "M9") << std::endl;
-	//std::cout << "load texture successfully ? :  " << texture.load_texture_all("jpg_resource/Tex_0009_1.jpg", "M9") << std::endl;
 	
 	glutMainLoop();
 	return 0;

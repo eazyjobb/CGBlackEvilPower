@@ -208,3 +208,33 @@ int Obj_reader::load_from_file(const char *filename, Painter &painter) {
 	input.close();
 	return 0;
 }
+
+int Obj_reader::save_to_file(const char *str) {
+	std::ofstream os;
+	os.open(str);
+	for (size_t i = 0; i < v.size(); ++i) os << "v " << v[i].x << ' ' << v[i].y << ' ' << v[i].z << std::endl;
+	for (size_t i = 0; i < vt.size(); ++i) os << "vt " << vt[i].x << ' ' << vt[i].y << ' ' << vt[i].z << std::endl;
+	for (size_t i = 0; i < vn.size(); ++i) os << "vn " << vn[i].x << ' ' << vn[i].y << ' ' << vn[i].z << std::endl;
+
+	for (size_t i = 0; i < faces.size(); ++i) {
+		os << "f";
+		if (texturepos[i].size() && normalvec[i].size()) {
+			for (size_t j = 0; j < faces[i].size(); ++j) os << ' ' << faces[i][j] << '/' << texturepos[i][j] << '/' << normalvec[i][j];
+			os << "\n";
+		}
+		else if (texturepos[i].size() && !(normalvec[i].size())) {
+			for (size_t j = 0; j < faces[i].size(); ++j) os << ' ' << faces[i][j] << '/' << texturepos[i][j];
+			os << "\n";
+		}
+		else if (!(texturepos[i].size()) && (normalvec[i].size())) {
+			for (size_t j = 0; j < faces[i].size(); ++j) os << ' ' << faces[i][j] << "//" << normalvec[i][j];
+			os << "\n";
+		}
+		else if (!(texturepos.size()) && !(normalvec[i].size())) {
+			for (size_t j = 0; j < faces[i].size(); ++j) os << ' ' << faces[i][j];
+			os << "\n";
+		}
+	}
+	os.close();
+	return 0;
+}
