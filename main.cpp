@@ -216,6 +216,8 @@ void processMouse(int button, int state, int x, int y)
 #define LIGHT_CLOSE 9
 #define LOAD_TEXTURE 10
 #define CREAT_TEST_OBJ 11
+#define ZOOMIN 12
+#define ZOOMOUT 13
 
 
 void processMenuEvents(int option) {
@@ -288,6 +290,14 @@ void processMenuEvents(int option) {
 	case CREAT_TEST_OBJ:
 		test.test_init();
 		break;
+	case ZOOMIN:
+		test[test.get_objnumber() - 1].zoominout(1.1);
+		obj_reader.zoominout(1.1);
+		break;
+	case ZOOMOUT:
+		test[test.get_objnumber() - 1].zoominout(0.9);
+		obj_reader.zoominout(0.9);
+		break;
 	default:
 		break;
 	}
@@ -295,7 +305,7 @@ void processMenuEvents(int option) {
 }
 //菜单构成
 void createGLUTMenus() {
-	int menu, sub_MODE, sub_SAVE, sub_LIGHT;
+	int menu, sub_MODE, sub_SAVE, sub_LIGHT, sub_FIX;
 
 	sub_MODE = glutCreateMenu(processMenuEvents);
 	glutAddMenuEntry("线框模式", LINE_MODE);
@@ -311,6 +321,9 @@ void createGLUTMenus() {
 	glutAddMenuEntry("开", LIGHT_OPEN);
 	glutAddMenuEntry("关", LIGHT_CLOSE);
 
+	sub_FIX = glutCreateMenu(processMenuEvents);
+	glutAddMenuEntry("放大", ZOOMIN);
+	glutAddMenuEntry("缩小", ZOOMOUT);
 
 	menu = glutCreateMenu(processMenuEvents);
 	glutAddMenuEntry("绘制立方体", CREAT_TEST_OBJ);
@@ -319,6 +332,7 @@ void createGLUTMenus() {
 	glutAddMenuEntry("读取纹理", LOAD_TEXTURE);
 	glutAddSubMenu("模式选择", sub_MODE);
 	glutAddSubMenu("灯光", sub_LIGHT);
+	glutAddSubMenu("修改", sub_FIX);
 	
 	
 	glutAttachMenu(GLUT_RIGHT_BUTTON);

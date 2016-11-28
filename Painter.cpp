@@ -319,6 +319,12 @@ void Object::show() { //未对面的合法性作检测和纠正
 		glBindTexture(GL_TEXTURE_2D, 0);	//绑定默认纹理
 	} glPopMatrix();
 }
+
+void Object::zoominout(double k) {
+	for (size_t i = 0; i < points.size(); ++i) points[i] = points[i] * k;
+	for (size_t i = 0; i < norm_vector.size(); ++i) norm_vector[i] = norm_vector[i] * k;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////// Patinter
 
 Painter::Painter(): x(100.0), y(0.0), z(0.0), \

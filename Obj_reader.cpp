@@ -238,3 +238,7 @@ int Obj_reader::save_to_file(const char *str) {
 	os.close();
 	return 0;
 }
+
+void Obj_reader::zoominout(double k) {
+	for (size_t i = 0; i < v.size(); ++i) v[i] = v[i] * k;
+}

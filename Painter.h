@@ -45,6 +45,8 @@ public:
 
 	void calc_norm_vector(); //读取完整个物体后为每该物体计算其每个顶点的法向量
 
+	void zoominout(double k);
+
 	size_t tmp_texture;
 private:
 	float x, y, z; //物体所在空间坐标
